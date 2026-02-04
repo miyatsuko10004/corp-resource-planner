@@ -17,6 +17,8 @@ class Employee(Base):
     email = Column(String, unique=True, index=True)
     role = Column(String) # Consultant, Manager, Partner, etc.
     unit_cost = Column(Integer, default=800000) # Monthly standard cost
+    skills = Column(String, default="") # Comma-separated (e.g., "Python,AWS")
+    industries = Column(String, default="") # Comma-separated (e.g., "Finance,Retail")
     
     assignments = relationship("ProjectAssignment", back_populates="employee")
 

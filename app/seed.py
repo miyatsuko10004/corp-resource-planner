@@ -29,6 +29,9 @@ def seed_data():
         "Consultant": 800000,
         "Analyst": 600000
     }
+    skill_set = ["Python", "Java", "AWS", "Azure", "SAP", "Salesforce", "React", "PMO", "Data Analysis"]
+    industry_set = ["Finance", "Manufacturing", "Retail", "Healthcare", "Public", "Telco"]
+
     employees = []
     for _ in range(50):
         role_name = random.choice(list(roles.keys()))
@@ -36,7 +39,9 @@ def seed_data():
             name=fake.name(),
             email=fake.email(),
             role=role_name,
-            unit_cost=roles[role_name]
+            unit_cost=roles[role_name],
+            skills=",".join(random.sample(skill_set, k=random.randint(1, 3))),
+            industries=",".join(random.sample(industry_set, k=random.randint(1, 2)))
         )
         db.add(emp)
         employees.append(emp)

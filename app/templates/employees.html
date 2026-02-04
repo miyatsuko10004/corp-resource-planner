@@ -3,14 +3,27 @@
 {% block title %}Resources{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-bold mb-6 text-gray-700">Resource Heatmap (6 Months)</h2>
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-700">Resource Heatmap (6 Months)</h2>
+    <form action="/employees" method="get" class="flex space-x-2">
+        <input type="text" name="q" value="{{ request.query_params.get('q', '') }}" 
+               placeholder="Search by Name, Skill, Industry..." 
+               class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-64">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Search
+        </button>
+        {% if request.query_params.get('q') %}
+        <a href="/employees" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Clear</a>
+        {% endif %}
+    </form>
+</div>
 
 <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
     <table class="min-w-full table-auto border-collapse">
         <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                 <th class="py-3 px-6 text-left sticky left-0 bg-gray-200 z-10">Employee</th>
-                <th class="py-3 px-6 text-left">Role</th>
+                <th class="py-3 px-6 text-left">Role & Skills</th>
                 {% for header in month_headers %}
                 <th class="py-3 px-2 text-center min-w-[80px]">{{ header }}</th>
                 {% endfor %}
@@ -19,15 +32,29 @@
         <tbody class="text-gray-600 text-sm font-light">
             {% for emp in employees %}
             <tr class="border-b border-gray-200 hover:bg-gray-100">
-                <td class="py-3 px-6 text-left sticky left-0 bg-white z-10 font-medium whitespace-nowrap">
+                <td class="py-3 px-6 text-left sticky left-0 bg-white z-10 font-medium whitespace-nowrap align-top">
                     {{ emp.name }}
                     <div class="text-xs text-gray-400 font-normal">{{ emp.email }}</div>
                 </td>
-                <td class="py-3 px-6 text-left whitespace-nowrap">
-                    {{ emp.role }}
+                <td class="py-3 px-6 text-left align-top">
+                    <div class="font-bold mb-1">{{ emp.role }}</div>
+                    <div class="flex flex-wrap gap-1 mb-1">
+                        {% for skill in emp.skills.split(',') %}
+                        {% if skill %}
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">{{ skill }}</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                        {% for ind in emp.industries.split(',') %}
+                        {% if ind %}
+                        <span class="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded border border-gray-300">{{ ind }}</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </td>
                 {% for month in emp.heatmap %}
-                <td class="py-3 px-2 text-center border-l border-gray-100">
+                <td class="py-3 px-2 text-center border-l border-gray-100 align-middle">
                     {% if month.percent == 0 %}
                         <div class="bg-red-100 text-red-600 py-1 rounded w-full font-bold">0%</div>
                     {% elif month.percent < 80 %}
@@ -43,26 +70,5 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
-
-<div class="mt-8">
-    <h3 class="text-xl font-bold mb-4 text-gray-700">Detailed Assignments</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for emp in employees %}
-        <div class="bg-white rounded shadow p-4 border-t-4 border-blue-500">
-            <h4 class="font-bold text-gray-800">{{ emp.name }}</h4>
-            <ul class="mt-2 space-y-1">
-                {% for assign in emp.assignments %}
-                <li class="text-xs text-gray-600">
-                    <span class="font-semibold">{{ assign.project.name }}</span><br>
-                    {{ assign.start_date }} ~ {{ assign.end_date }} ({{ assign.effort_percent }}%)
-                </li>
-                {% else %}
-                <li class="text-xs text-gray-400 italic">No assignments</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
-    </div>
 </div>
 {% endblock %}

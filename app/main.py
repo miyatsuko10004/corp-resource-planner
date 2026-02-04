@@ -130,10 +130,25 @@ def get_monthly_utilization(employee, start_date, months=6):
             
     return utilization
 
+from sqlalchemy import or_
+
+# ...
+
 # Employee List (Resource Management)
 @app.get("/employees", response_class=HTMLResponse)
-def employee_list(request: Request, db: Session = Depends(get_db)):
-    employees = db.query(Employee).all()
+def employee_list(request: Request, q: str = None, db: Session = Depends(get_db)):
+    query = db.query(Employee)
+    if q:
+        search = f"%{q}%"
+        query = query.filter(
+            or_(
+                Employee.name.like(search),
+                Employee.skills.like(search),
+                Employee.industries.like(search),
+                Employee.role.like(search)
+            )
+        )
+    employees = query.all()
     today = date.today()
     
     # Attach utilization data to each employee object (runtime only)
