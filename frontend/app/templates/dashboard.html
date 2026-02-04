@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-gray-700">Project Management</h2>
+    <a href="/projects/new" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        + New Project
+    </a>
+</div>
+
+<div class="bg-white shadow-md rounded my-6 overflow-x-auto">
+    <table class="min-w-full table-auto">
+        <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-6 text-left">Project Name</th>
+                <th class="py-3 px-6 text-left">Customer</th>
+                <th class="py-3 px-6 text-center">Status</th>
+                <th class="py-3 px-6 text-center">Period</th>
+                <th class="py-3 px-6 text-right">Amount (JPY)</th>
+                <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+            {% for project in projects %}
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6 text-left whitespace-nowrap">
+                    <a href="/projects/{{ project.id }}" class="font-medium text-blue-600 hover:text-blue-800">{{ project.name }}</a>
+                </td>
+                <td class="py-3 px-6 text-left">
+                    {{ project.customer.name }}
+                </td>
+                <td class="py-3 px-6 text-center">
+                    {% if project.status == 'Lead' %}
+                        <span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-xs">Lead</span>
+                    {% elif project.status == 'Contracted' %}
+                        <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Contracted</span>
+                    {% else %}
+                        <span class="bg-blue-200 text-blue-600 py-1 px-3 rounded-full text-xs">{{ project.status }}</span>
+                    {% endif %}
+                </td>
+                <td class="py-3 px-6 text-center">
+                    {{ project.start_date }} - {{ project.end_date }}
+                </td>
+                <td class="py-3 px-6 text-right">
+                    ¥{{ "{:,}".format(project.contract_amount) }}
+                </td>
+                <td class="py-3 px-6 text-center">
+                    <div class="flex item-center justify-center">
+                        <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

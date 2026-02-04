@@ -1,0 +1,19 @@
+[project]
+name = "project-service"
+version = "0.1.0"
+description = "Project Management Service"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "pydantic",
+    "python-multipart",
+    "requests" 
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "httpx",
+    "pytest-asyncio"
+]

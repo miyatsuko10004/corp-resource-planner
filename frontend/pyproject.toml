@@ -1,0 +1,11 @@
+[project]
+name = "frontend-bff"
+version = "0.1.0"
+description = "Frontend BFF"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "jinja2",
+    "python-multipart",
+    "httpx"
+]

@@ -1,11 +1,35 @@
 version: '3.8'
 
 services:
-  web:
-    build: .
+  resource-service:
+    build: 
+      context: ./services/resource
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./services/resource:/app
+
+  project-service:
+    build: 
+      context: ./services/project
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./services/project:/app
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - ./frontend:/app
     environment:
-      - PYTHONUNBUFFERED=1
+      - RESOURCE_SERVICE_URL=http://resource-service:8000
+      - PROJECT_SERVICE_URL=http://project-service:8000
+    depends_on:
+      - resource-service
+      - project-service

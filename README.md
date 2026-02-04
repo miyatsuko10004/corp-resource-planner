@@ -1,44 +1,33 @@
-# 案件リソース管理用基幹システム (Mock)
+# Corporate Resource Planner
 
-Python (FastAPI) と Tailwind CSS を使用し、Docker環境で即座に動作確認ができるように構築されています。
+社内のあらゆるプロジェクトとリソース（社員）を一元管理するためのERPシステムです。
+ITコンサルティングに限らず、受託開発、デザイン制作、社内タスクなど、多様なプロジェクトの収支予実管理とリソース最適化を支援します。
 
 ## 特徴
 
-*   **プロジェクト管理**: 案件のステータス、契約金額、期間、**粗利シミュレーション（予定原価・粗利率）**を管理
-*   **リソース管理**:
-    *   **稼働状況ヒートマップ**: 社員×月別の稼働率（向こう6ヶ月）を色分け表示
-    *   **スキル検索**: 保有スキルや業界経験、氏名によるリアルタイム検索
-*   **モダンなUI**: Tailwind CSS を採用したシンプルでレスポンシブな画面
-*   **ダミーデータ生成**: 起動時にリアルなダミーデータ（社員50名、顧客、プロジェクト、**スキルタグ**）を自動生成
+*   **汎用プロジェクト管理**: 
+    *   プロジェクトのステータス（リード、契約、完了など）、予算、期間を一元管理。
+    *   プロジェクトごとの収支シミュレーション（予定原価・粗利）機能。
+*   **リソースマネジメント**:
+    *   **稼働ヒートマップ**: 全社員の月別稼働率（向こう6ヶ月）を色分け表示し、アサインの空き状況を即座に把握。
+    *   **スキルDB**: 従業員のスキルや経験タグを管理し、最適な人材を検索。
+*   **マイクロサービスアーキテクチャ**:
+    *   機能ごとに独立したサービス (`resource-service`, `project-service`) として疎結合に構成。
+    *   将来的な機能拡張やチーム開発のスケーリングに対応。
 
 ## 技術スタック
 
-*   **Backend**: Python 3.11, FastAPI, SQLAlchemy
-*   **Frontend**: Jinja2 Templates, Tailwind CSS (CDN)
-*   **Database**: SQLite (ファイルベース)
-*   **Container**: Docker, Docker Compose
-*   **Package Manager**: uv (pyproject.toml)
+*   **Frontend (BFF)**: Python (FastAPI), Jinja2, Tailwind CSS
+*   **Services**:
+    *   `resource-service`: 人材・スキル・単価管理
+    *   `project-service`: プロジェクト・アサイン予実管理
+*   **Database**: SQLite (各サービスで独立)
+*   **Infrastructure**: Docker Compose
 
 ## 起動方法
 
-Docker と Docker Compose が必要です。
-
 ```bash
-# ビルドと起動
 docker-compose up --build
 ```
 
-起動後、ブラウザで以下のURLにアクセスしてください。
-
-*   ダッシュボード: http://localhost:8000
-*   リソース一覧: http://localhost:8000/employees
-
-## ディレクトリ構成
-
-*   `app/`: アプリケーションコード
-    *   `models.py`: データベース定義 (SQLAlchemy)
-    *   `main.py`: ルーティングとビューロジック
-    *   `templates/`: HTMLテンプレート (Jinja2)
-    *   `seed.py`: ダミーデータ生成スクリプト
-*   `Dockerfile`: コンテナ定義
-*   `docker-compose.yml`: コンテナオーケストレーション設定
+起動後、ブラウザで `http://localhost:8000` にアクセスしてください。

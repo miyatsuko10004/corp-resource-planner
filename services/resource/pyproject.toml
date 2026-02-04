@@ -1,0 +1,18 @@
+[project]
+name = "resource-service"
+version = "0.1.0"
+description = "Resource Management Service"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "pydantic",
+    "python-multipart"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "httpx",
+    "pytest-asyncio"
+]
